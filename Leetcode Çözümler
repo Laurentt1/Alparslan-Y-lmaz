@@ -1,0 +1,178 @@
+Add Two Numbers
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+/**
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var addTwoNumbers = function(l1, l2) {
+    var List = new ListNode(0);
+    var head = List;
+    var sum = 0;
+    var carry = 0;
+
+    while(l1!==null||l2!==null||sum>0){
+
+        if(l1!==null){
+            sum = sum + l1.val;
+            l1 = l1.next;
+        }
+        if(l2!==null){
+            sum = sum + l2.val;
+            l2 = l2.next;
+        }
+        if(sum>=10){
+            carry = 1;
+            sum = sum - 10;
+        }
+
+        head.next = new ListNode(sum);
+        head = head.next;
+
+        sum = carry;
+        carry = 0;
+
+    }
+
+    return List.next;
+};
+
+
+Unique Paths
+
+public class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] map = new int[m][n];
+        for(int i = 0 ; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(i == 0 || j == 0) map[i][j] = 1;
+                else map[i][j] = map[i][j-1]+map[i-1][j];
+            }
+        }
+
+        return map[m-1][n-1];
+    }
+}
+
+
+
+
+
+Median of Two Sorted Arrays
+
+var findMedianSortedArrays = function(nums1, nums2) {
+    if(nums1.length > nums2.length) return findMedianSortedArrays(nums2, nums1)
+    let x = nums1.length
+    let y = nums2.length
+    let low = 0, high = x
+    while(low <= high) {
+        const partitionX = (high + low) >> 1
+        const partitionY = ((x + y + 1) >> 1) - partitionX
+        
+        const maxX = partitionX == 0 ? Number.NEGATIVE_INFINITY : nums1[partitionX - 1]
+        const maxY = partitionY == 0 ? Number.NEGATIVE_INFINITY : nums2[partitionY - 1]
+        
+        const minX = partitionX == nums1.length ? Number.POSITIVE_INFINITY : nums1[partitionX]
+        const minY = partitionY == nums2.length ? Number.POSITIVE_INFINITY : nums2[partitionY ]
+        
+        if(maxX <= minY && maxY <= minX) {
+            const lowMax = Math.max(maxX, maxY)
+            if( (x + y) % 2 == 1)
+                return lowMax
+            return (lowMax + Math.min(minX, minY)) / 2
+        } else if(maxX < minY) {
+            low = partitionX + 1
+        } else 
+            high = partitionX - 1
+    }
+    
+};
+
+Longest Valid Parentheses
+
+if s[i] == '(' // invalid string
+  f(i) = 0
+else if s[i - f(i-1) - 1] == '(' // match type1
+  f(i) = (f(i-1) + 2) + f(i - f(i-1) - 2) // the length of type1 plus any type2 before it
+else
+  f(i) = 0
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var longestValidParentheses = function(s) {
+  let dp = [0]
+  for (let i = 1; i < s.length; i++) {
+    dp[i] = s[i] === ')' && s[i - dp[i-1] - 1] === '('
+      ? dp[i-1] + 2 + (dp[i - dp[i-1] - 2] || 0)
+      : 0
+  }
+  return Math.max(...dp)
+};
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var longestValidParentheses = function(s) {
+  const stack = [-1]
+  let max = 0
+
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '(') {
+      stack.push(i)
+    } else {
+      stack.pop() // This one is used to match the current ')'.
+      if (stack.length > 0) {
+        max =  Math.max(max, i - stack[stack.length - 1])
+      } else {
+        // Stack is empty,
+        // which means the last popped item is not a '(' but the old special initial edge,
+        // which also means the current `)` does no have a match.
+        // Set the index of the current `)` as new initial edge.
+        stack.push(i)
+      }
+    }
+  }
+
+  return max
+};
+
+
+Remove Duplicates from Sorted List II
+
+
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var deleteDuplicates = function(head) {
+  if (!head) { return null }
+  const prehead = { next: head }
+
+  let p = prehead
+  let dupVal = NaN
+
+  for (let p1 = head; p1; p1 = p1.next) {
+    if (p1.val === dupVal) {
+      p.next = p1.next
+    } else if (p1.next && p1.val === p1.next.val) {
+      p.next = p1.next
+      dupVal = p1.val
